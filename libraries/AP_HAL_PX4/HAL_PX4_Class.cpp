@@ -163,7 +163,7 @@ static int main_loop(int argc, char **argv)
          */
         hrt_call_after(&loop_overtime_call, 100000, (hrt_callout)loop_overtime, NULL);
 
-        loop();
+        loop();//程序的入口
 
         if (px4_ran_overtime) {
             /*
