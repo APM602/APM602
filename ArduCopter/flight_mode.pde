@@ -16,12 +16,12 @@ static bool set_mode(uint8_t mode)
     bool ignore_checks = !motors.armed();   // allow switching to any mode if disarmed.  We rely on the arming check to perform
 
     // return immediately if we are already in the desired mode
-    if (mode == control_mode) {
+    if (mode == control_mode) { //如果现在的模式就是要设定的模式，直接返回true
         return true;
     }
 
-    switch(mode) {
-        case ACRO:
+    switch(mode) {//选择飞行模式
+        case ACRO://特技模式（手动）
             #if FRAME_CONFIG == HELI_FRAME
                 success = heli_acro_init(ignore_checks);
             #else
@@ -29,7 +29,7 @@ static bool set_mode(uint8_t mode)
             #endif
             break;
 
-        case STABILIZE:
+        case STABILIZE://自稳模式（手动）
             #if FRAME_CONFIG == HELI_FRAME
                 success = heli_stabilize_init(ignore_checks);
             #else
@@ -37,11 +37,11 @@ static bool set_mode(uint8_t mode)
             #endif
             break;
 
-        case ALT_HOLD:
+        case ALT_HOLD://定高模式
             success = althold_init(ignore_checks);
             break;
 
-        case AUTO:
+        case AUTO://自动模式
             success = auto_init(ignore_checks);
             break;
 
@@ -49,7 +49,7 @@ static bool set_mode(uint8_t mode)
             success = circle_init(ignore_checks);
             break;
 
-        case LOITER:
+        case LOITER://留待模式，保持飞行器的位置方向高度不变
             success = loiter_init(ignore_checks);
             break;
 
@@ -61,11 +61,11 @@ static bool set_mode(uint8_t mode)
             success = land_init(ignore_checks);
             break;
 
-        case RTL:
+        case RTL://返航模式
             success = rtl_init(ignore_checks);
             break;
 
-        case DRIFT:
+        case DRIFT://飘逸模式（手动）
             success = drift_init(ignore_checks);
             break;
 
@@ -95,7 +95,7 @@ static bool set_mode(uint8_t mode)
     }
 
     // update flight mode
-    if (success) {
+    if (success) {//如果初始化成功，从原先的模式退出，将现在的模式设为控制模式
         // perform any cleanup required by previous flight mode
         exit_mode(control_mode, mode);
         control_mode = mode;
