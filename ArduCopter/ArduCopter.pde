@@ -188,7 +188,7 @@ static AP_HAL::BetterStream* cliSerial;
 // AP_HAL instance
 ////////////////////////////////////////////////////////////////////////////////
 
-const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;
+const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;//定义hal为板载驱动
 
 ////////////////////////////////////////////////////////////////////////////////
 // Parameters
@@ -483,10 +483,10 @@ bool circle_pilot_yaw_override; // true if pilot is overriding yaw
 ////////////////////////////////////////////////////////////////////////////////
 // Used to track the orientation of the copter for Simple mode. This value is reset at each arming
 // or in SuperSimple mode when the copter leaves a 20m radius from home.
-static float simple_cos_yaw = 1.0;
+static float simple_cos_yaw = 1.0;//simple偏航角为0
 static float simple_sin_yaw;
 static int32_t super_simple_last_bearing;
-static float super_simple_cos_yaw = 1.0;
+static float super_simple_cos_yaw = 1.0;//super偏航角为0
 static float super_simple_sin_yaw;
 
 
