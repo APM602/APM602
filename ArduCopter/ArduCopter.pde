@@ -1184,7 +1184,7 @@ static void update_GPS(void)
 
         // checks to initialise home and take location based pictures
         if (gps.status() >= AP_GPS::GPS_OK_FIX_3D) {
-
+           
 #if CAMERA == ENABLED
             if (camera.update_location(current_loc) == true) {
                 do_take_picture();
