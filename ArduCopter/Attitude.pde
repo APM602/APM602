@@ -8,25 +8,25 @@ float get_smoothing_gain()
 }
 
 // get_pilot_desired_angle - transform pilot's roll or pitch input into a desired lean angle
-// returns desired angle in centi-degrees
+// returns desired angle in centi-degrees把飞机输入转化为倾斜角
 static void get_pilot_desired_lean_angles(float roll_in, float pitch_in, float &roll_out, float &pitch_out)
 {
-    float angle_max = constrain_float(aparm.angle_max,1000,8000);
-    float scaler = (float)angle_max/(float)ROLL_PITCH_INPUT_MAX;
+    float angle_max = constrain_float(aparm.angle_max,1000,8000);//将angle_max限定在1000到8000之间
+    float scaler = (float)angle_max/(float)ROLL_PITCH_INPUT_MAX;//ROLL_PITCH_INPUT_MAX=4500
 
     // scale roll_in, pitch_in to correct units
-    roll_in *= scaler;
+    roll_in *= scaler;//将其限定在一定大小之内
     pitch_in *= scaler;
 
-    // do circular limit
-    float total_in = pythagorous2((float)pitch_in, (float)roll_in);
+    // do circular limit，再次限定
+    float total_in = pythagorous2((float)pitch_in, (float)roll_in);//平方和
     if (total_in > angle_max) {
-        float ratio = angle_max / total_in;
+        float ratio = angle_max / total_in;//最大值除以平方和
         roll_in *= ratio;
         pitch_in *= ratio;
     }
 
-    // do lateral tilt to euler roll conversion
+    // do lateral tilt to euler roll conversionM_PI_F=3.14
     roll_in = (18000/M_PI_F) * atanf(cosf(pitch_in*(M_PI_F/18000))*tanf(roll_in*(M_PI_F/18000)));
 
     // return
@@ -40,7 +40,7 @@ static void get_pilot_desired_lean_angles(float roll_in, float pitch_in, float &
 static float get_pilot_desired_yaw_rate(int16_t stick_angle)
 {
     // convert pilot input to the desired yaw rate
-    return stick_angle * g.acro_yaw_p;
+    return stick_angle * g.acro_yaw_p;//将yaw值乘以yaw的kp值
 }
 
 /*************************************************************
@@ -116,7 +116,7 @@ set_throttle_takeoff()
 // get_pilot_desired_throttle - transform pilot's throttle input to make cruise throttle mid stick
 // used only for manual throttle modes
 // returns throttle output 0 to 1000
-static int16_t get_pilot_desired_throttle(int16_t throttle_control)
+static int16_t get_pilot_desired_throttle(int16_t throttle_control)//获得目标油门
 {
     int16_t throttle_out;
 
