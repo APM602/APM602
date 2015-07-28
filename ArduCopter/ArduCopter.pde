@@ -88,7 +88,7 @@
 #include <AP_Menu.h>
 #include <AP_Param.h>
 #include <StorageManager.h>
-// AP_HAL
+// AP_HAL硬件抽象层
 #include <AP_HAL.h>
 #include <AP_HAL_AVR.h>
 #include <AP_HAL_AVR_SITL.h>
@@ -158,7 +158,7 @@
 #include <AP_LandingGear.h>     // Landing Gear library
 #include <AP_Terrain.h>
 
-// AP_HAL to Arduino compatibility layer
+// AP_HAL to Arduino compatibility layer兼容arduino层
 #include "compat.h"
 // Configuration
 #include "defines.h"
@@ -961,7 +961,7 @@ static void fast_loop()
     // --------------------
     read_inertia();
 
-    // run the attitude controllers
+    // run the attitude controllers最终跳至这个函数
     update_flight_mode();
 }
 
