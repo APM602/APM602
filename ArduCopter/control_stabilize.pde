@@ -32,7 +32,7 @@ static void stabilize_run()
     }
 
     // apply SIMPLE mode transform to pilot inputs
-    update_simple_mode();
+    update_simple_mode();//跳至arducopter.pde
 
     // convert pilot input to lean angles
     // To-Do: convert get_pilot_desired_lean_angles to return angles as floats
