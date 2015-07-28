@@ -49,7 +49,7 @@ static bool set_mode(uint8_t mode)
             success = circle_init(ignore_checks);
             break;
 
-        case LOITER://留待模式，保持飞行器的位置方向高度不变
+        case LOITER://悬停模式，保持飞行器的位置方向高度不变
             success = loiter_init(ignore_checks);
             break;
 
