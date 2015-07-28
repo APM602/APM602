@@ -20,7 +20,7 @@ static bool stabilize_init(bool ignore_checks)
 static void stabilize_run()//将用户输入转化为此时飞行模式下的倾斜角、滚转速率、爬升率等
 {
     float target_roll, target_pitch;//目标滚转角俯仰角
-    float target_yaw_rate;//目标偏航速率
+    float target_yaw_rate;//目标偏航角速率
     int16_t pilot_throttle_scaled;
 
     // if not armed or throttle at zero, set throttle to zero and exit immediately如果没有启动或者油门为0，把油门设为0并立即退出
@@ -44,7 +44,7 @@ static void stabilize_run()//将用户输入转化为此时飞行模式下的倾
     // get pilot's desired throttle
     pilot_throttle_scaled = get_pilot_desired_throttle(g.rc_3.control_in);
 
-    // call attitude controller
+    // call attitude controller地面坐标系下的滚转和俯仰角度及地面坐标系偏航速率，来稳定滚转角及俯仰角。
     attitude_control.angle_ef_roll_pitch_rate_ef_yaw_smooth(target_roll, target_pitch, target_yaw_rate, get_smoothing_gain());
 
     // body-frame rate controller is run directly from 100hz loop
