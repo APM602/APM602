@@ -957,7 +957,7 @@ static void fast_loop()
     // send outputs to the motors library
     motors_output();
 
-    // Inertial Nav
+    // Inertial Nav读取惯性单元数据
     // --------------------
     read_inertia();
 
