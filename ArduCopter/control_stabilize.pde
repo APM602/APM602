@@ -19,15 +19,15 @@ static bool stabilize_init(bool ignore_checks)
 // should be called at 100hz or more
 static void stabilize_run()
 {
-    float target_roll, target_pitch;
-    float target_yaw_rate;
+    float target_roll, target_pitch;//目标滚转角俯仰角
+    float target_yaw_rate;//目标偏航速率
     int16_t pilot_throttle_scaled;
 
-    // if not armed or throttle at zero, set throttle to zero and exit immediately
+    // if not armed or throttle at zero, set throttle to zero and exit immediately如果没有启动或者油门为0，把油门设为0并立即退出
     if(!motors.armed() || g.rc_3.control_in <= 0) {
         attitude_control.relax_bf_rate_controller();
-        attitude_control.set_yaw_target_to_current_heading();
-        attitude_control.set_throttle_out(0, false);
+        attitude_control.set_yaw_target_to_current_heading();//把目标偏航设为当前方向
+        attitude_control.set_throttle_out(0, false);//油门设为0
         return;
     }
 
