@@ -17,7 +17,7 @@ static bool stabilize_init(bool ignore_checks)
 
 // stabilize_run - runs the main stabilize controller
 // should be called at 100hz or more
-static void stabilize_run()
+static void stabilize_run()//将用户输入转化为此时飞行模式下的倾斜角、滚转速率、爬升率等
 {
     float target_roll, target_pitch;//目标滚转角俯仰角
     float target_yaw_rate;//目标偏航速率
