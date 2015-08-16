@@ -114,16 +114,16 @@ void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw_smooth(float roll_angle
     Vector3f angle_ef_error;    // earth frame angle errors
 
     // sanity check smoothing gain
-    smoothing_gain = constrain_float(smoothing_gain,1.0f,50.0f);
+    smoothing_gain = constrain_float(smoothing_gain,1.0f,50.0f);//把smoothing_gain约束在1到5之间
 
     // if accel limiting and feed forward enabled
-    if ((_accel_roll_max > 0.0f) && _rate_bf_ff_enabled) {
-        rate_change_limit = _accel_roll_max * _dt;
+    if ((_accel_roll_max > 0.0f) && _rate_bf_ff_enabled) {//如果roll角加速度最大值大于0
+        rate_change_limit = _accel_roll_max * _dt;//_dt时间间隔，以秒为单位
 
         // calculate earth-frame feed forward roll rate using linear response when close to the target, sqrt response when we're further away
-        rate_ef_desired = sqrt_controller(roll_angle_ef-_angle_ef_target.x, smoothing_gain, _accel_roll_max);
+        rate_ef_desired = sqrt_controller(roll_angle_ef-_angle_ef_target.x, smoothing_gain, _accel_roll_max);//target为实时目标点，desired为最终目标点
 
-        // apply acceleration limit to feed forward roll rate
+        // apply acceleration limit to feed forward roll rate把加速度限制应用于滚转角速度的前反馈
         _rate_ef_desired.x = constrain_float(rate_ef_desired, _rate_ef_desired.x-rate_change_limit, _rate_ef_desired.x+rate_change_limit);
 
         // update earth-frame roll angle target using desired roll rate
@@ -471,13 +471,13 @@ bool AC_AttitudeControl::frame_conversion_bf_to_ef(const Vector3f& bf_vector, Ve
 void AC_AttitudeControl::update_ef_roll_angle_and_error(float roll_rate_ef, Vector3f &angle_ef_error, float overshoot_max)
 {
     // calculate angle error with maximum of +- max angle overshoot
-    angle_ef_error.x = wrap_180_cd(_angle_ef_target.x - _ahrs.roll_sensor);
+    angle_ef_error.x = wrap_180_cd(_angle_ef_target.x - _ahrs.roll_sensor);//把误差转化到180度之内
     angle_ef_error.x  = constrain_float(angle_ef_error.x, -overshoot_max, overshoot_max);
 
-    // update roll angle target to be within max angle overshoot of our roll angle
+    // update roll angle target to be within max angle overshoot of our roll angle误差加传感器的值为目标值
     _angle_ef_target.x = angle_ef_error.x + _ahrs.roll_sensor;
 
-    // increment the roll angle target
+    // increment the roll angle target，把roll角目标更新到下一时刻
     _angle_ef_target.x += roll_rate_ef * _dt;
     _angle_ef_target.x = wrap_180_cd(_angle_ef_target.x);
 }
