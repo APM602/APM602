@@ -116,15 +116,16 @@ set_throttle_takeoff()
 // get_pilot_desired_throttle - transform pilot's throttle input to make cruise throttle mid stick
 // used only for manual throttle modes
 // returns throttle output 0 to 1000
+//获得需要的油门大小，使其在中间位置左右
 static int16_t get_pilot_desired_throttle(int16_t throttle_control)//获得目标油门
 {
     int16_t throttle_out;
 
-    int16_t mid_stick = g.rc_3.get_control_mid();
+    int16_t mid_stick = g.rc_3.get_control_mid();//获得中间油门大小？？死区油门？
 
     // ensure reasonable throttle values
-    throttle_control = constrain_int16(throttle_control,0,1000);
-    g.throttle_mid = constrain_int16(g.throttle_mid,300,700);
+    throttle_control = constrain_int16(throttle_control,0,1000);//把油门限制在0到1000
+    g.throttle_mid = constrain_int16(g.throttle_mid,300,700);//把中间油门大小限制在300到700
 
     // check throttle is above, below or in the deadband
     if (throttle_control < mid_stick) {
@@ -135,7 +136,7 @@ static int16_t get_pilot_desired_throttle(int16_t throttle_control)//获得目�
         throttle_out = g.throttle_mid + ((float)(throttle_control-mid_stick)) * (float)(1000-g.throttle_mid) / (float)(1000-mid_stick);
     }else{
         // must be in the deadband
-        throttle_out = g.throttle_mid;
+        throttle_out = g.throttle_mid;//控制马达的转速保持稳定
     }
 
     return throttle_out;
@@ -143,7 +144,7 @@ static int16_t get_pilot_desired_throttle(int16_t throttle_control)//获得目�
 
 // get_pilot_desired_climb_rate - transform pilot's throttle input to
 // climb rate in cm/s.  we use radio_in instead of control_in to get the full range
-// without any deadzone at the bottom
+// without any deadzone at the bottom中间部分为死区，此函数为根据油门大小获得爬升速率
 static int16_t get_pilot_desired_climb_rate(int16_t throttle_control)
 {
     int16_t desired_rate = 0;
