@@ -48,13 +48,13 @@ static void loiter_run()
         update_simple_mode();
 
         // process pilot's roll and pitch input
-        wp_nav.set_pilot_desired_acceleration(g.rc_1.control_in, g.rc_2.control_in);
+        wp_nav.set_pilot_desired_acceleration(g.rc_1.control_in, g.rc_2.control_in);//通过pitch，roll杆控制水平方向加速度
 
         // get pilot's desired yaw rate
-        target_yaw_rate = get_pilot_desired_yaw_rate(g.rc_4.control_in);
+        target_yaw_rate = get_pilot_desired_yaw_rate(g.rc_4.control_in);//获得偏航角速度
 
         // get pilot desired climb rate
-        target_climb_rate = get_pilot_desired_climb_rate(g.rc_3.control_in);
+        target_climb_rate = get_pilot_desired_climb_rate(g.rc_3.control_in);//获得爬升速率
 
         // check for pilot requested take-off
         if (ap.land_complete && target_climb_rate > 0) {
@@ -68,24 +68,24 @@ static void loiter_run()
         wp_nav.clear_pilot_desired_acceleration();
     }
 
-    // relax loiter target if we might be landed
+    // relax loiter target if we might be landed若快着陆了减弱悬停状态
     if (land_complete_maybe()) {
         wp_nav.loiter_soften_for_landing();
     }
 
-    // when landed reset targets and output zero throttle
+    // when landed reset targets and output zero throttle如果着陆完成，重新设置任务并且油门设为0
     if (ap.land_complete) {
         wp_nav.init_loiter_target();
         attitude_control.relax_bf_rate_controller();
         attitude_control.set_yaw_target_to_current_heading();
         // move throttle to between minimum and non-takeoff-throttle to keep us on the ground
-        attitude_control.set_throttle_out(get_throttle_pre_takeoff(g.rc_3.control_in), false);
-        pos_control.set_alt_target_to_current_alt();
+        attitude_control.set_throttle_out(get_throttle_pre_takeoff(g.rc_3.control_in), false);//起飞前防止油门输入
+        pos_control.set_alt_target_to_current_alt();//保持当前姿态
     }else{
         // run loiter controller
         wp_nav.update_loiter(ekfGndSpdLimit, ekfNavVelGainScaler);
 
-        // call attitude controller
+        // call attitude controller姿态信息通过传感器获得
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw(wp_nav.get_roll(), wp_nav.get_pitch(), target_yaw_rate);
 
         // body-frame rate controller is run directly from 100hz loop
