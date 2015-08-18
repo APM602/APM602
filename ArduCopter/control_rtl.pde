@@ -24,18 +24,18 @@ static void rtl_run()
 {
     // check if we need to move to next state
     if (rtl_state_complete) {
-        switch (rtl_state) {
+        switch (rtl_state) {//爬升状态，开始返航
         case InitialClimb:
             rtl_return_start();
             break;
         case ReturnHome:
-            rtl_loiterathome_start();
+            rtl_loiterathome_start();//已到家，开始悬停
             break;
         case LoiterAtHome:
-            if (g.rtl_alt_final > 0 && !failsafe.radio) {
-                rtl_descent_start();
+            if (g.rtl_alt_final > 0 && !failsafe.radio) {//已在家悬停，若未着陆或者遥控器未打开故障模式
+                rtl_descent_start();//开始下降
             }else{
-                rtl_land_start();
+                rtl_land_start();//否则开始着陆
             }
             break;
         case FinalDescent:
@@ -50,19 +50,19 @@ static void rtl_run()
     // call the correct run function
     switch (rtl_state) {
 
-    case InitialClimb:
+    case InitialClimb://若爬升状态
         rtl_climb_return_run();
         break;
 
-    case ReturnHome:
+    case ReturnHome://若返航状态
         rtl_climb_return_run();
         break;
 
-    case LoiterAtHome:
+    case LoiterAtHome://若在家悬停状态
         rtl_loiterathome_run();
         break;
 
-    case FinalDescent:
+    case FinalDescent://若下降状态
         rtl_descent_run();
         break;
 
