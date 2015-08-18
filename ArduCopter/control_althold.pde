@@ -4,7 +4,7 @@
  * control_althold.pde - init and run calls for althold, flight mode
  */
 
-// althold_init - initialise althold controller
+// althold_init - initialise althold controller定高模式
 static bool althold_init(bool ignore_checks)
 {
     // initialize vertical speeds and leash lengths
@@ -44,7 +44,7 @@ static void althold_run()
     // get pilot's desired yaw rate
     target_yaw_rate = get_pilot_desired_yaw_rate(g.rc_4.control_in);
 
-    // get pilot desired climb rate
+    // get pilot desired climb rate获得爬升速率
     target_climb_rate = get_pilot_desired_climb_rate(g.rc_3.control_in);
 
     // check for pilot requested take-off
@@ -55,7 +55,7 @@ static void althold_run()
         set_throttle_takeoff();
     }
 
-    // reset target lean angles and heading while landed
+    // reset target lean angles and heading while landed检测是否着陆
     if (ap.land_complete) {
         attitude_control.relax_bf_rate_controller();
         attitude_control.set_yaw_target_to_current_heading();
