@@ -109,35 +109,36 @@ void AC_AttitudeControl::relax_bf_rate_controller()
 //      smoothing_gain : a number from 1 to 50 with 1 being sluggish and 50 being very crisp
 void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw_smooth(float roll_angle_ef, float pitch_angle_ef, float yaw_rate_ef, float smoothing_gain)
 {
-    float rate_ef_desired;
+    float rate_ef_desired;//地面坐标系下的速度
     float rate_change_limit;
-    Vector3f angle_ef_error;    // earth frame angle errors
+    Vector3f angle_ef_error;    // earth frame angle errors地面坐标系下角度误差
 
     // sanity check smoothing gain
-    smoothing_gain = constrain_float(smoothing_gain,1.0f,50.0f);//把smoothing_gain约束在1到5之间
+    smoothing_gain = constrain_float(smoothing_gain,1.0f,50.0f);//把smoothing_gain约束在1到5之间，1的话反应迟钝，50反应迅速，反应慢的话在有风的情况下可能导致坠机
 
     // if accel limiting and feed forward enabled
-    if ((_accel_roll_max > 0.0f) && _rate_bf_ff_enabled) {//如果roll角加速度最大值大于0
-        rate_change_limit = _accel_roll_max * _dt;//_dt时间间隔，以秒为单位
+    if ((_accel_roll_max > 0.0f) && _rate_bf_ff_enabled) {//如果roll角加速度最大值大于0且允许速度前馈？
+        rate_change_limit = _accel_roll_max * _dt;//_dt时间间隔，以秒为单位，此函数代表roll在单位时间内改变速率的最大值？即角加速度最大值？
 
         // calculate earth-frame feed forward roll rate using linear response when close to the target, sqrt response when we're further away
+        //计算需要的速度
         rate_ef_desired = sqrt_controller(roll_angle_ef-_angle_ef_target.x, smoothing_gain, _accel_roll_max);//target为实时目标点，desired为最终目标点
 
-        // apply acceleration limit to feed forward roll rate把加速度限制应用于滚转角速度的前反馈
+        // apply acceleration limit to feed forward roll rate限制角速度大小
         _rate_ef_desired.x = constrain_float(rate_ef_desired, _rate_ef_desired.x-rate_change_limit, _rate_ef_desired.x+rate_change_limit);
 
-        // update earth-frame roll angle target using desired roll rate
+        // update earth-frame roll angle target using desired roll rate回传角度误差，第三个参数是什么
         update_ef_roll_angle_and_error(_rate_ef_desired.x, angle_ef_error, AC_ATTITUDE_RATE_STAB_ROLL_OVERSHOOT_ANGLE_MAX);
     } else {
         // target roll and pitch to desired input roll and pitch
-        _angle_ef_target.x = roll_angle_ef;
-        angle_ef_error.x = wrap_180_cd_float(_angle_ef_target.x - _ahrs.roll_sensor);
+        _angle_ef_target.x = roll_angle_ef;//目标角度为滚转角
+        angle_ef_error.x = wrap_180_cd_float(_angle_ef_target.x - _ahrs.roll_sensor);//角度误差为目标角度减去传感器的角度，限制在180度之内
 
         // set roll and pitch feed forward to zero
-        _rate_ef_desired.x = 0;
+        _rate_ef_desired.x = 0;//所需要的滚转角速度设为0
     }
     // constrain earth-frame angle targets
-    _angle_ef_target.x = constrain_float(_angle_ef_target.x, -_aparm.angle_max, _aparm.angle_max);
+    _angle_ef_target.x = constrain_float(_angle_ef_target.x, -_aparm.angle_max, _aparm.angle_max);//约束目标角度
 
     // if accel limiting and feed forward enabled
     if ((_accel_pitch_max > 0.0f) && _rate_bf_ff_enabled) {
@@ -231,11 +232,11 @@ void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw(float roll_angle_ef, fl
         update_ef_yaw_angle_and_error(_rate_ef_desired.z, angle_ef_error, AC_ATTITUDE_RATE_STAB_YAW_OVERSHOOT_ANGLE_MAX);
     }
 
-    // convert earth-frame angle errors to body-frame angle errors
+    // convert earth-frame angle errors to body-frame angle errors把地面坐标系角度误差转为机体坐标系误差
     frame_conversion_ef_to_bf(angle_ef_error, _angle_bf_error);
 
     // convert body-frame angle errors to body-frame rate targets
-    update_rate_bf_targets();
+    update_rate_bf_targets();//更新目标速度
 
     // set roll and pitch feed forward to zero
     _rate_ef_desired.x = 0;
