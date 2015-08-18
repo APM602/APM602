@@ -174,7 +174,7 @@ static void poshold_run()
         // get pilot desired climb rate (for alt-hold mode and take-off)
         target_climb_rate = get_pilot_desired_climb_rate(g.rc_3.control_in);
 
-        // check for pilot requested take-off
+        // check for pilot requested take-off检测起飞状态
         if (ap.land_complete && target_climb_rate > 0) {
             // indicate we are taking off
             set_land_complete(false);
