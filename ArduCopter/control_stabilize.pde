@@ -41,7 +41,7 @@ static void stabilize_run()//将用户输入转化为此时飞行模式下的倾
     // get pilot's desired yaw rate
     target_yaw_rate = get_pilot_desired_yaw_rate(g.rc_4.control_in);
 
-    // get pilot's desired throttle
+    // get pilot's desired throttle3为油门杆
     pilot_throttle_scaled = get_pilot_desired_throttle(g.rc_3.control_in);
 
     // call attitude controller地面坐标系下的滚转和俯仰角度及地面坐标系偏航速率，来稳定滚转角及俯仰角。
