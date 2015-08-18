@@ -21,22 +21,22 @@
 static bool auto_init(bool ignore_checks)
 {
     if ((position_ok() && mission.num_commands() > 1) || ignore_checks) {
-        auto_mode = Auto_Loiter;
+        auto_mode = Auto_Loiter;//首先处于悬停模式
 
         // stop ROI from carrying over from previous runs of the mission
         // To-Do: reset the yaw as part of auto_wp_start when the previous command was not a wp command to remove the need for this special ROI check
-        if (auto_yaw_mode == AUTO_YAW_ROI) {
+        if (auto_yaw_mode == AUTO_YAW_ROI) {//测试，防止ROI在先前的任务中继承
             set_auto_yaw_mode(AUTO_YAW_HOLD);
         }
 
         // initialise waypoint and spline controller
-        wp_nav.wp_and_spline_init();
+        wp_nav.wp_and_spline_init();//轨迹初始化
 
         // clear guided limits
         guided_limit_clear();
 
         // start/resume the mission (based on MIS_RESTART parameter)
-        mission.start_or_resume();
+        mission.start_or_resume();//开始执行
         return true;
     }else{
         return false;
@@ -51,28 +51,28 @@ static void auto_run()
     // call the correct auto controller
     switch (auto_mode) {
 
-    case Auto_TakeOff:
+    case Auto_TakeOff://自动起飞
         auto_takeoff_run();
         break;
 
     case Auto_WP:
-    case Auto_CircleMoveToEdge:
+    case Auto_CircleMoveToEdge://自动追踪轨迹
         auto_wp_run();
         break;
 
-    case Auto_Land:
+    case Auto_Land://自动着陆
         auto_land_run();
         break;
 
-    case Auto_RTL:
+    case Auto_RTL://自动返航
         auto_rtl_run();
         break;
 
-    case Auto_Circle:
+    case Auto_Circle://自动画圈
         auto_circle_run();
         break;
 
-    case Auto_Spline:
+    case Auto_Spline://自动追踪样条曲线
         auto_spline_run();
         break;
 
@@ -82,7 +82,7 @@ static void auto_run()
 #endif
         break;
 
-    case Auto_Loiter:
+    case Auto_Loiter://自动悬停
         auto_loiter_run();
         break;
     }
