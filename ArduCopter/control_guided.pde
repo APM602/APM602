@@ -41,11 +41,11 @@ static bool guided_init(bool ignore_checks)
 // guided_takeoff_start - initialises waypoint controller to implement take-off
 static void guided_takeoff_start(float final_alt)
 {
-    guided_mode = Guided_TakeOff;
+    guided_mode = Guided_TakeOff;//引导模式下起飞
     
-    // initialise wpnav destination
+    // initialise wpnav destination初始化目标位置，获得地面站信息
     Vector3f target_pos = inertial_nav.get_position();
-    target_pos.z = final_alt;
+    target_pos.z = final_alt;//在地面站获得目标高度
     wp_nav.set_wp_destination(target_pos);
 
     // initialise yaw
