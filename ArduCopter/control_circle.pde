@@ -45,15 +45,15 @@ static void circle_run()
     // process pilot inputs
     if (!failsafe.radio) {
         // get pilot's desired yaw rate
-        target_yaw_rate = get_pilot_desired_yaw_rate(g.rc_4.control_in);
+        target_yaw_rate = get_pilot_desired_yaw_rate(g.rc_4.control_in);//获得目标偏航角速度
         if (target_yaw_rate != 0) {
-            circle_pilot_yaw_override = true;
+            circle_pilot_yaw_override = true;//若不为零，重写成功
         }
 
         // get pilot desired climb rate
         target_climb_rate = get_pilot_desired_climb_rate(g.rc_3.control_in);
 
-        // check for pilot requested take-off
+        // check for pilot requested take-off若在地上且爬升速率大于0，说明要起飞
         if (ap.land_complete && target_climb_rate > 0) {
             // indicate we are taking off
             set_land_complete(false);
@@ -66,16 +66,16 @@ static void circle_run()
     circle_nav.update();
 
     // call attitude controller
-    if (circle_pilot_yaw_override) {
+    if (circle_pilot_yaw_override) {//若yaw通道有输入，通过roll,pitch,及yaw角速度来控制姿态
         attitude_control.angle_ef_roll_pitch_rate_ef_yaw(circle_nav.get_roll(), circle_nav.get_pitch(), target_yaw_rate);
-    }else{
+    }else{//否则自动控制
         attitude_control.angle_ef_roll_pitch_yaw(circle_nav.get_roll(), circle_nav.get_pitch(), circle_nav.get_yaw(),true);
     }
 
     // run altitude controller
     if (sonar_alt_health >= SONAR_ALT_HEALTH_MAX) {
         // if sonar is ok, use surface tracking
-        target_climb_rate = get_throttle_surface_tracking(target_climb_rate, pos_control.get_alt_target(), G_Dt);
+        target_climb_rate = get_throttle_surface_tracking(target_climb_rate, pos_control.get_alt_target(), G_Dt);//G_Dt，陀螺仪积分时间
     }
     // update altitude target and call position controller
     pos_control.set_alt_target_from_climb_rate(target_climb_rate, G_Dt);
