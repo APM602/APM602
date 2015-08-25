@@ -93,7 +93,7 @@ static void loiter_run()
 
         // run altitude controller
         if (sonar_alt_health >= SONAR_ALT_HEALTH_MAX) {
-            // if sonar is ok, use surface tracking
+            // if sonar is ok, use surface tracking使得飞机保持在地面以上一定的位置飞行
             target_climb_rate = get_throttle_surface_tracking(target_climb_rate, pos_control.get_alt_target(), G_Dt);
         }
 
