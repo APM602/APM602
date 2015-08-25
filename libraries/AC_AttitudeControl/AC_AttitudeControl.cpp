@@ -542,9 +542,10 @@ void AC_AttitudeControl::integrate_bf_rate_error_to_angle_errors()
 // update_rate_bf_targets - converts body-frame angle error to body-frame rate targets for roll, pitch and yaw axis
 //   targets rates in centi-degrees taken from _angle_bf_error
 //   results in centi-degrees/sec put into _rate_bf_target
+//把角度误差转换为目标角速度
 void AC_AttitudeControl::update_rate_bf_targets()
 {
-    // stab roll calculation
+    // stab roll calculation角度误差乘以p=目标角速度
     _rate_bf_target.x = _p_angle_roll.kP() * _angle_bf_error.x;
     // constrain roll rate request
     if (_flags.limit_angle_to_rate_request) {
@@ -565,8 +566,8 @@ void AC_AttitudeControl::update_rate_bf_targets()
         _rate_bf_target.z = constrain_float(_rate_bf_target.z,-_angle_rate_y_max,_angle_rate_y_max);
     }
 
-	_rate_bf_target.x += _angle_bf_error.y * _ahrs.get_gyro().z;
-	_rate_bf_target.y += -_angle_bf_error.x * _ahrs.get_gyro().z;
+	_rate_bf_target.x += _angle_bf_error.y * _ahrs.get_gyro().z;//roll速度=原roll速度+pitch*z
+	_rate_bf_target.y += -_angle_bf_error.x * _ahrs.get_gyro().z;//pitch速度=原pitch速度+roll*z
 }
 
 //
