@@ -216,13 +216,13 @@ void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw(float roll_angle_ef, fl
     _angle_ef_target.y = constrain_float(pitch_angle_ef, -_aparm.angle_max, _aparm.angle_max);
     angle_ef_error.y = wrap_180_cd_float(_angle_ef_target.y - _ahrs.pitch_sensor);
 
-    if (_accel_yaw_max > 0.0f) {
+    if (_accel_yaw_max > 0.0f) {//当加速度大于0时，增加所需的速度，小于0时，速度保持不变，同时更新角度及误差
         // set earth-frame feed forward rate for yaw
         float rate_change_limit = _accel_yaw_max * _dt;
 
-        float rate_change = yaw_rate_ef - _rate_ef_desired.z;
+        float rate_change = yaw_rate_ef - _rate_ef_desired.z;//当前角速度-所需角速度
         rate_change = constrain_float(rate_change, -rate_change_limit, rate_change_limit);
-        _rate_ef_desired.z += rate_change;
+        _rate_ef_desired.z += rate_change;//计算所需要的速度值 
         // calculate yaw target angle and angle error
         update_ef_yaw_angle_and_error(_rate_ef_desired.z, angle_ef_error, AC_ATTITUDE_RATE_STAB_YAW_OVERSHOOT_ANGLE_MAX);
     } else {
@@ -243,7 +243,7 @@ void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw(float roll_angle_ef, fl
     _rate_ef_desired.y = 0;
     // convert earth-frame feed forward rates to body-frame feed forward rates
     frame_conversion_ef_to_bf(_rate_ef_desired, _rate_bf_desired);
-    _rate_bf_target += _rate_bf_desired;
+    _rate_bf_target += _rate_bf_desired;//目标速度等于上一个周期的目标+所需的速度
 
     // body-frame to motor outputs should be called separately
 }
