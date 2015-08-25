@@ -42,9 +42,9 @@ static void loiter_run()
         return;
     }
 
-    // process pilot inputs
+    // process pilot inputs处理飞机输入 
     if (!failsafe.radio) {
-        // apply SIMPLE mode transform to pilot inputs
+        // apply SIMPLE mode transform to pilot inputs把简单的模式转换应用到飞机输入
         update_simple_mode();
 
         // process pilot's roll and pitch input
@@ -65,6 +65,7 @@ static void loiter_run()
         }
     } else {
         // clear out pilot desired acceleration in case radio failsafe event occurs and we do not switch to RTL for some reason
+        //如果遥控器失效并且我们没有设到返航模式，就把加速度清零
         wp_nav.clear_pilot_desired_acceleration();
     }
 
