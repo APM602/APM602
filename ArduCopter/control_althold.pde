@@ -69,7 +69,7 @@ static void althold_run()
 
         // call throttle controller
         if (sonar_alt_health >= SONAR_ALT_HEALTH_MAX) {
-            // if sonar is ok, use surface tracking
+            // if sonar is ok, use surface tracking声纳可用，就在定高位置tracking
             target_climb_rate = get_throttle_surface_tracking(target_climb_rate, pos_control.get_alt_target(), G_Dt);
         }
 
