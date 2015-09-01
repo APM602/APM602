@@ -106,7 +106,7 @@ void AC_AttitudeControl::relax_bf_rate_controller()
 //
 
 // angle_ef_roll_pitch_rate_ef_yaw_smooth - attempts to maintain a roll and pitch angle and yaw rate (all earth frame) while smoothing the attitude based on the feel parameter
-//      smoothing_gain : a number from 1 to 50 with 1 being sluggish and 50 being very crisp
+//      smoothing_gain : a number from 1 to 50 with 1 being sluggish and 50 being very crisp此函数通过目标角度计算出所需要的角速度，并更新了误差值
 void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw_smooth(float roll_angle_ef, float pitch_angle_ef, float yaw_rate_ef, float smoothing_gain)
 {
     float rate_ef_desired;//地面坐标系下的速度
