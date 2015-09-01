@@ -121,8 +121,9 @@ void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw_smooth(float roll_angle
         rate_change_limit = _accel_roll_max * _dt;//_dt时间间隔，以秒为单位，此函数代表roll在单位时间内改变速率的最大值？即角加速度最大值？
 
         // calculate earth-frame feed forward roll rate using linear response when close to the target, sqrt response when we're further away
-        //计算需要的速度
-        rate_ef_desired = sqrt_controller(roll_angle_ef-_angle_ef_target.x, smoothing_gain, _accel_roll_max);//target为实时目标点，desired为最终目标点
+        //计算需要的速度，p通道，error*p
+        //遥控器设计的值减去上一个目标点，即现在目标点距离遥控器设计值的大小
+        rate_ef_desired = sqrt_controller(roll_angle_ef-_angle_ef_target.x, smoothing_gain, _accel_roll_max);//target为实时目标点，roll_angle_ef为最终目标点
 
         // apply acceleration limit to feed forward roll rate限制角速度大小
         _rate_ef_desired.x = constrain_float(rate_ef_desired, _rate_ef_desired.x-rate_change_limit, _rate_ef_desired.x+rate_change_limit);
