@@ -117,12 +117,12 @@ void AC_AttitudeControl::angle_ef_roll_pitch_rate_ef_yaw_smooth(float roll_angle
     smoothing_gain = constrain_float(smoothing_gain,1.0f,50.0f);//把smoothing_gain约束在1到5之间，1的话反应迟钝，50反应迅速，反应慢的话在有风的情况下可能导致坠机
 
     // if accel limiting and feed forward enabled
-    if ((_accel_roll_max > 0.0f) && _rate_bf_ff_enabled) {//如果roll角加速度最大值大于0且允许速度前馈？
+    if ((_accel_roll_max > 0.0f) && _rate_bf_ff_enabled) {//如果roll角加速度(地面坐标系）最大值大于0且允许速度前馈？
         rate_change_limit = _accel_roll_max * _dt;//_dt时间间隔，以秒为单位，此函数代表roll在单位时间内改变速率的最大值？即角加速度最大值？
 
         // calculate earth-frame feed forward roll rate using linear response when close to the target, sqrt response when we're further away
         //计算需要的速度
-        rate_ef_desired = sqrt_controller(roll_angle_ef-_angle_ef_target.x, smoothing_gain, _accel_roll_max);//target为实时目标点，desired为最终目标点
+        rate_ef_desired = sqrt_controller(roll_angle_ef-_angle_ef_target.x, smoothing_gain, _accel_roll_max);//target为实时目标点，不断更新，而遥控器的信号也是不断更新
 
         // apply acceleration limit to feed forward roll rate限制角速度大小
         _rate_ef_desired.x = constrain_float(rate_ef_desired, _rate_ef_desired.x-rate_change_limit, _rate_ef_desired.x+rate_change_limit);
