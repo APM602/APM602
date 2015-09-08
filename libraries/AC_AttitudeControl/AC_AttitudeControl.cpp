@@ -94,9 +94,9 @@ void AC_AttitudeControl::relax_bf_rate_controller()
 {
     // ensure zero error in body frame rate controllers
     const Vector3f& gyro = _ahrs.get_gyro();
-    _rate_bf_target = gyro * AC_ATTITUDE_CONTROL_DEGX100;
+    _rate_bf_target = gyro * AC_ATTITUDE_CONTROL_DEGX100;//陀螺仪获得三个方向的角速度，弧度向角度转化，再乘以100
 
-    _pid_rate_roll.reset_I();
+    _pid_rate_roll.reset_I();//I值置0
     _pid_rate_pitch.reset_I();
     _pid_rate_yaw.reset_I();
 }
