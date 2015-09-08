@@ -91,8 +91,10 @@ void AC_PosControl::set_dt_xy(float dt_xy)
 void AC_PosControl::set_speed_z(float speed_down, float speed_up)
 {
     // ensure speed_down is always negative
-    speed_down = (float)-fabs(speed_down);
-
+    speed_down = (float)-fabs(speed_down);//绝对值取反
+    
+    
+    //_speed_down_cms最大下降速度，cm/s，以下在限制z方向最大速度的大小 
     if (((float)fabs(_speed_down_cms-speed_down) > 1.0f) || ((float)fabs(_speed_up_cms-speed_up) > 1.0f)) {
         _speed_down_cms = speed_down;
         _speed_up_cms = speed_up;
@@ -100,7 +102,7 @@ void AC_PosControl::set_speed_z(float speed_down, float speed_up)
     }
 }
 
-/// set_accel_z - set vertical acceleration in cm/s/s
+/// set_accel_z - set vertical acceleration in cm/s/s，限制z方向最大加速度的大小
 void AC_PosControl::set_accel_z(float accel_cmss)
 {
     if ((float)fabs(_accel_z_cms-accel_cmss) > 1.0f) {
