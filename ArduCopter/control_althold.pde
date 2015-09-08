@@ -8,11 +8,12 @@
 static bool althold_init(bool ignore_checks)
 {
     // initialize vertical speeds and leash lengths
+    //pilot_velocity_z_max飞行器可能会请求的速度最大值，若允许的最大速度在请求的速度之外，把能够请求的速度设为界限
     pos_control.set_speed_z(-g.pilot_velocity_z_max, g.pilot_velocity_z_max);
     pos_control.set_accel_z(g.pilot_accel_z);
 
     // initialise altitude target to stopping point
-    pos_control.set_target_to_stopping_point_z();
+    pos_control.set_target_to_stopping_point_z();//约束z方向距离变化的范围
 
     return true;
 }
@@ -25,17 +26,17 @@ static void althold_run()
     float target_yaw_rate;
     int16_t target_climb_rate;
 
-    // if not auto armed set throttle to zero and exit immediately
+    // if not auto armed set throttle to zero and exit immediately若没有开启auto mission
     if(!ap.auto_armed) {
-        attitude_control.relax_bf_rate_controller();
-        attitude_control.set_yaw_target_to_current_heading();
-        attitude_control.set_throttle_out(0, false);
-        pos_control.set_alt_target_to_current_alt();
+        attitude_control.relax_bf_rate_controller();//获得角速度，并将三个欧拉角I值置0
+        attitude_control.set_yaw_target_to_current_heading();//把当前传感器的值设为目标偏航角
+        attitude_control.set_throttle_out(0, false);//把油门设为0
+        pos_control.set_alt_target_to_current_alt();//把目标位置设为当前高度
         return;
     }
 
     // apply SIMPLE mode transform to pilot inputs
-    update_simple_mode();
+    update_simple_mode();//跳至arducopter.pde，相当于把遥控器的输入做了个预处理
 
     // get pilot desired lean angles
     // To-Do: convert get_pilot_desired_lean_angles to return angles as floats
@@ -55,7 +56,7 @@ static void althold_run()
         set_throttle_takeoff();
     }
 
-    // reset target lean angles and heading while landed检测是否着陆
+    // reset target lean angles and heading while landed检测是否着陆，着陆时类似not auto armed
     if (ap.land_complete) {
         attitude_control.relax_bf_rate_controller();
         attitude_control.set_yaw_target_to_current_heading();
