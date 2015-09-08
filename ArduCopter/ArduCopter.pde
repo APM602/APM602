@@ -1218,16 +1218,17 @@ void update_simple_mode(void)
     float rollx, pitchx;
 
     // exit immediately if no new radio frame or not in simple mode
+    //simple_mode，0为disable,1为simple，2为supersimple
     if (ap.simple_mode == 0 || !ap.new_radio_frame) {
         return;
     }
 
     // mark radio frame as consumed
-    ap.new_radio_frame = false;
+    ap.new_radio_frame = false;//如果有新的遥控器信号就设为true
 
-    if (ap.simple_mode == 1) {
+    if (ap.simple_mode == 1) {//下面这两个分支实现的是一样的功能
         // rotate roll, pitch input by -initial simple heading (i.e. north facing)
-        rollx = g.rc_1.control_in*simple_cos_yaw - g.rc_2.control_in*simple_sin_yaw;
+        rollx = g.rc_1.control_in*simple_cos_yaw - g.rc_2.control_in*simple_sin_yaw;//simple_cos_yaw=1,simple_sin_yaw=0
         pitchx = g.rc_1.control_in*simple_sin_yaw + g.rc_2.control_in*simple_cos_yaw;
     }else{
         // rotate roll, pitch input by -super simple heading (reverse of heading to home)
