@@ -6,7 +6,7 @@
 #define AP_HAL_MAIN() \
     extern "C" __EXPORT int SKETCH_MAIN(int argc, char * const argv[]); \
     int SKETCH_MAIN(int argc, char * const argv[]) {	\
-	hal.init(argc, argv); \
+	hal.init(argc, argv); \//在APM602-libraries-AP_HAL-HAL.h中,初始化串口、总线、IO口、定时器等\
 	return OK; \
     }
 
