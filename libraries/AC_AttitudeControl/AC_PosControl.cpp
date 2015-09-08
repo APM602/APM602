@@ -241,7 +241,7 @@ void AC_PosControl::update_z_controller()
 void AC_PosControl::calc_leash_length_z()
 {
     if (_flags.recalc_leash_z) {
-        _leash_up_z = calc_leash_length(_speed_up_cms, _accel_z_cms, _p_pos_z.kP());
+        _leash_up_z = calc_leash_length(_speed_up_cms, _accel_z_cms, _p_pos_z.kP());//根据速度、加速度最大值及kp，计算出垂直方向上升的约束距离
         _leash_down_z = calc_leash_length(-_speed_down_cms, _accel_z_cms, _p_pos_z.kP());
         _flags.recalc_leash_z = false;
     }
@@ -858,12 +858,12 @@ float AC_PosControl::calc_leash_length(float speed_cms, float accel_cms, float k
 
     // sanity check acceleration and avoid divide by zero
     if (accel_cms <= 0.0f) {
-        accel_cms = POSCONTROL_ACCELERATION_MIN;
+        accel_cms = POSCONTROL_ACCELERATION_MIN;//水平加速度最小值,50cm/s2
     }
 
     // avoid divide by zero
     if (kP <= 0.0f) {
-        return POSCONTROL_LEASH_LENGTH_MIN;
+        return POSCONTROL_LEASH_LENGTH_MIN;//最小约束距离100cm
     }
 
     // calculate leash length
