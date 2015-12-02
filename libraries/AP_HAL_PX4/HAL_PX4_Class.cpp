@@ -84,7 +84,7 @@ HAL_PX4::HAL_PX4() :
 {}
 
 bool _px4_thread_should_exit = false;        /**< Daemon exit flag */
-static bool thread_running = false;        /**< Daemon status flag */
+static bool thread_running = false;        /**< Daemon status flag *///daemon后台程序
 static int daemon_task;                /**< Handle of daemon task / thread */
 bool px4_ran_overtime;
 
@@ -195,7 +195,7 @@ static void usage(void)
     printf("\t-d  DEVICE         set terminal device (default %s)\n", UARTA_DEFAULT_DEVICE);
     printf("\t-d2 DEVICE         set second terminal device (default %s)\n", UARTC_DEFAULT_DEVICE);
     printf("\t-d3 DEVICE         set 3rd terminal device (default %s)\n", UARTD_DEFAULT_DEVICE);
-    printf("\t-d4 DEVICE         set 2nd GPS device (default %s)\n", UARTE_DEFAULT_DEVICE);
+    printf("\t-d4 DEVICE         set 2nd GPS device (default %s)\n", UARTE_DEFAULT_DEVICE);//第二个GPS接口
     printf("\n");
 }
 
@@ -203,27 +203,27 @@ static void usage(void)
 void HAL_PX4::init(int argc, char * const argv[]) const 
 {
     int i;
-    const char *deviceA = UARTA_DEFAULT_DEVICE;
+    const char *deviceA = UARTA_DEFAULT_DEVICE;//定义串口指针
     const char *deviceC = UARTC_DEFAULT_DEVICE;
     const char *deviceD = UARTD_DEFAULT_DEVICE;
     const char *deviceE = UARTE_DEFAULT_DEVICE;
 
-    if (argc < 1) {
+    if (argc < 1) {//当没有参数传入时
         printf("%s: missing command (try '%s start')", 
-               SKETCHNAME, SKETCHNAME);
+               SKETCHNAME, SKETCHNAME);//SKETCHNAME的定义没有找到，应该是编译之后产生
         usage();
         exit(1);
     }
 
     for (i=0; i<argc; i++) {
-        if (strcmp(argv[i], "start") == 0) {
-            if (thread_running) {
+        if (strcmp(argv[i], "start") == 0) {//当在控制台输入start时，执行如下指令
+            if (thread_running) {//如果后台程序在运行
                 printf("%s already running\n", SKETCHNAME);
                 /* this is not an error */
-                exit(0);
+                exit(0);//期待更好的编译器看代码~~
             }
 
-            uartADriver.set_device_path(deviceA);
+            uartADriver.set_device_path(deviceA);//传入串口指针
             uartCDriver.set_device_path(deviceC);
             uartDDriver.set_device_path(deviceD);
             uartEDriver.set_device_path(deviceE);
