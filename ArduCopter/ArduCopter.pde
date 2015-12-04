@@ -908,9 +908,9 @@ static void perf_update(void)
 void loop()
 {
     // wait for an INS sample
-    ins.wait_for_sample();
+    ins.wait_for_sample();//ins:惯性传感器
 
-    uint32_t timer = micros();
+    uint32_t timer = micros();//启动开始到此时的时间
 
     // check loop time
     perf_info_check_loop_time(timer - fast_loopTimer);
