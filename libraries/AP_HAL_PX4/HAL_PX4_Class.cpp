@@ -230,8 +230,8 @@ void HAL_PX4::init(int argc, char * const argv[]) const
             printf("Starting %s uartA=%s uartC=%s uartD=%s uartE=%s\n", 
                    SKETCHNAME, deviceA, deviceC, deviceD, deviceE);
 
-            _px4_thread_should_exit = false;
-            daemon_task = task_spawn_cmd(SKETCHNAME,
+            _px4_thread_should_exit = false;//如果线程不可以操作？？
+            daemon_task = task_spawn_cmd(SKETCHNAME,//应该是编译后产生的
                                          SCHED_FIFO,
                                          APM_MAIN_PRIORITY,
                                          APM_MAIN_THREAD_STACK_SIZE,
