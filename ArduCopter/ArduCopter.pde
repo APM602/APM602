@@ -857,10 +857,10 @@ void setup()
     cliSerial = hal.console;
 
     // Load the default values of variables listed in var_info[]s
-    AP_Param::setup_sketch_defaults();
+    AP_Param::setup_sketch_defaults();//写入参数
 
     // setup storage layout for copter
-    StorageManager::set_layout_copter();
+    StorageManager::set_layout_copter();//给四旋翼分配内存空间，空间起始位置及空间类型、大小
 
     init_ardupilot();
 
