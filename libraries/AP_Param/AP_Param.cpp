@@ -849,10 +849,10 @@ void AP_Param::setup_sketch_defaults(void)
 {
     setup();
     for (uint8_t i=0; i<_num_vars; i++) {
-        uint8_t type = PGM_UINT8(&_var_info[i].type);
-        if (type <= AP_PARAM_FLOAT) {
-            void *ptr = (void*)PGM_POINTER(&_var_info[i].ptr);
-            set_value((enum ap_var_type)type, ptr, PGM_FLOAT(&_var_info[i].def_value));
+        uint8_t type = PGM_UINT8(&_var_info[i].type);//返回参数类型，强制转换为uint8，包括PARAM_NONE等
+        if (type <= AP_PARAM_FLOAT) {//按道理讲uint8_t一定会小于float，这里可能是保护的作用？？
+            void *ptr = (void*)PGM_POINTER(&_var_info[i].ptr);//返回指向参数在内存中位置的指针
+            set_value((enum ap_var_type)type, ptr, PGM_FLOAT(&_var_info[i].def_value));//把参数变量设为一个特定的值
         }
     }
 }
