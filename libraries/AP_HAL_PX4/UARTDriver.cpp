@@ -67,7 +67,7 @@ void PX4UARTDriver::begin(uint32_t b, uint16_t rxS, uint16_t txS)
       allocate the read buffer
       we allocate buffers before we successfully open the device as we
       want to allocate in the early stages of boot, and cause minimum
-      thrashing of the heap once we are up. The ttyACM0 driver may not
+      thrashing of the heap once we are up. The ttyACM0 driver may not//啥意思？？？
       connect for some time after boot
      */
 	if (rxS != 0 && rxS != _readbuf_size) {
