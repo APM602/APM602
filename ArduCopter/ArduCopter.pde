@@ -916,7 +916,7 @@ void loop()
     perf_info_check_loop_time(timer - fast_loopTimer);
 
     // used by PI Loops
-    G_Dt                    = (float)(timer - fast_loopTimer) / 1000000.f;
+    G_Dt                    = (float)(timer - fast_loopTimer) / 1000000.f;//两次执行到此的时间差
     fast_loopTimer          = timer;
 
     // for mainloop failure monitoring
@@ -934,7 +934,7 @@ void loop()
     // in multiples of the main loop tick. So if they don't run on
     // the first call to the scheduler they won't run on a later
     // call until scheduler.tick() is called again
-    uint32_t time_available = (timer + MAIN_LOOP_MICROS) - micros();
+    uint32_t time_available = (timer + MAIN_LOOP_MICROS) - micros();//mainloop-fastloop的时间，为剩余时间
     scheduler.run(time_available);
 }
 
@@ -943,18 +943,18 @@ void loop()
 static void fast_loop()
 {
 
-    // IMU DCM Algorithm
+    // IMU DCM Algorithm IMU解算用的是DCM姿态解算
     // --------------------
-    read_AHRS();
+    read_AHRS();//常用的航姿参考系统（AHRS）内部采用的多传感器数据融合进行的航姿解算单元为卡尔曼滤波器
 
     // run low level rate controllers that only require IMU data
-    attitude_control.rate_controller_run();
+    attitude_control.rate_controller_run();//？？？
     
 #if FRAME_CONFIG == HELI_FRAME
     update_heli_control_dynamics();
 #endif //HELI_FRAME
 
-    // send outputs to the motors library
+    // send outputs to the motors library//把电机速度输出到库中，把数据传给电调及伺服系统
     motors_output();
 
     // Inertial Nav读取惯性单元数据
