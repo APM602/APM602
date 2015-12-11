@@ -152,7 +152,7 @@ static int main_loop(int argc, char **argv)
      */
     hal_px4_set_priority(APM_MAIN_PRIORITY);
 
-    while (!_px4_thread_should_exit) {
+    while (!_px4_thread_should_exit) {//当后台正在运行时，置true，这样就不执行飞控的loop
         perf_begin(perf_loop);
         
         /*
@@ -161,11 +161,11 @@ static int main_loop(int argc, char **argv)
           will only ever be called if a loop() call runs for more than
           0.1 second
          */
-        hrt_call_after(&loop_overtime_call, 100000, (hrt_callout)loop_overtime, NULL);
+        hrt_call_after(&loop_overtime_call, 100000, (hrt_callout)loop_overtime, NULL);//当loop函数执行超时时，调用hrt的驱动
 
         loop();//程序的入口
 
-        if (px4_ran_overtime) {
+        if (px4_ran_overtime) {//若PX4运行超过1s，要把最初的task重新给飞控
             /*
               we ran over 1s in loop(), and our priority was lowered
               to let a driver run. Set it back to high priority now.
