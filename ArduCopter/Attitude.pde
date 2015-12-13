@@ -26,7 +26,7 @@ static void get_pilot_desired_lean_angles(float roll_in, float pitch_in, float &
         pitch_in *= ratio;
     }
 
-    // do lateral tilt to euler roll conversionM_PI_F=3.14
+    // do lateral tilt to euler roll conversionM_PI_F=3.14遥控器倾斜角度向roll角转化？？？
     roll_in = (18000/M_PI_F) * atanf(cosf(pitch_in*(M_PI_F/18000))*tanf(roll_in*(M_PI_F/18000)));
 
     // return
